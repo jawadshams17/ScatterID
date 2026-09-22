@@ -29,7 +29,7 @@ export function exportEncryptedEnvelope({ masterPassphrase, keys, metadata = {} 
   const plainEnvelope = {
     header: {
       type: 'SCATTERID_PQC_KEY_BACKUP',
-      version: '1.0.0',
+      version: '2.0.0',
       exported_at: new Date().toISOString(),
       metadata
     },
