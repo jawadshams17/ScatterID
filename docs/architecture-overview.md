@@ -67,9 +67,9 @@ graph TB
 
 ---
 
-## 2. Zero-Knowledge Issuance Protocol
+## 2. Zero-Knowledge W3C VC Issuance Protocol (ScatterID 2.0)
 
-Raw identity claims never leave the organization's backend. Only a cryptographic pre-image commitment (`dataHash`) is ever transmitted to ScatterID.
+Raw identity claims never leave the organization's backend. Only a cryptographic pre-image commitment (`dataHash`) is ever transmitted to ScatterID, and the resulting credential is emitted as a standards-compliant **W3C Verifiable Credential (JSON-LD)** with off-chain signature storage to eliminate ledger bloat.
 
 ```mermaid
 sequenceDiagram
@@ -92,30 +92,31 @@ sequenceDiagram
     Note over Crypto: Sign dataHash with NIST ML-DSA-65
     Crypto-->>Gateway: Return { signature, publicKeyId, algorithm: "ML-DSA-65" }
     
+    Gateway->>Gateway: Format W3C Verifiable Credential (JSON-LD, DataIntegrityProof)
     Gateway->>Gateway: Save record to SQLite (status: 'pending')
     
     Gateway->>Ledger: Submit AnchorProof(credentialId, dataHash, issuerMSP)
-    Note over Ledger: Verify MSP, store in World State, emit ProofAnchored event
+    Note over Ledger: Minimally-Anchored Storage: Stores ONLY 32-byte dataHash & revocation state off-chain (No sig bloat)
     Ledger-->>Gateway: Transaction Committed (TxID)
     
     Gateway->>Gateway: Update SQLite status to 'anchored' & record audit log
-    Gateway-->>Client: 201 Created { credentialId, dataHash, signature, publicKeyId, anchorTxId }
+    Gateway-->>Client: 201 Created W3C Verifiable Credential Payload
     
-    Client-->>User: Return complete Credential Bundle (including Salt)
+    Client-->>User: Return complete W3C VC Bundle (including Salt & DataIntegrityProof)
 ```
 
 ---
 
-## 3. Dual-Mode Verification Architecture
+## 3. Dual-Mode Verification Architecture (ScatterID 2.0)
 
-ScatterID supports two independent modes of verification: **Online Trust-Boundary Verification** (real-time blockchain validation) and **Zero-Dependency Offline Verification** (air-gapped mathematical checking).
+ScatterID 2.0 supports two independent modes of verification for W3C Verifiable Credentials: **Online Trust-Boundary Verification** (real-time blockchain validation) and **Zero-Dependency Offline Verification** (air-gapped mathematical checking).
 
 ```mermaid
 graph TD
-    subgraph InputBundle["Credential Bundle Presentation"]
+    subgraph InputBundle["W3C Verifiable Credential Presentation"]
         Claim["Original JSON Claim"]
         Salt["16-byte Secret Salt"]
-        Proof["Proof Bundle (dataHash, signature, publicKeyId, credentialId)"]
+        VC["W3C VC Object (@context, credentialSubject, proof: DataIntegrityProof)"]
     end
 
     subgraph ModeSelection["Verification Mode Selection"]
@@ -125,13 +126,13 @@ graph TD
 
     Claim --> ModeSelection
     Salt --> ModeSelection
-    Proof --> ModeSelection
+    VC --> ModeSelection
 
     subgraph OnlineFlow["Online Verification Workflow"]
-        On1["SDK: Compute dataHash = SHA3-256(Salt || Claim)"]
-        On2["POST /verify { credentialId, dataHash }"]
+        On1["SDK: Extract dataHash & credentialId from W3C VC"]
+        On2["POST /verify { vc: W3C_VC } OR { credentialId, dataHash }"]
         On3["Gateway queries Vault Key Registry for publicKeyId"]
-        On4["Crypto Microservice verifies ML-DSA-65 signature"]
+        On4["Crypto Microservice verifies ML-DSA-65 DataIntegrityProof"]
         On5["Gateway queries Fabric Ledger for active status"]
         On6["Fail-Closed Decision: Valid iff Sig Valid AND Ledger Active"]
         
@@ -140,9 +141,9 @@ graph TD
 
     subgraph OfflineFlow["Offline Verification Workflow (tools/verify_offline.py / .js)"]
         Off1["Level 1: Recompute SHA3-256(Salt || Claim)"]
-        Off2["Assert recomputed hash == dataHash (Pre-image Commitment)"]
+        Off2["Assert recomputed hash == vc.credentialSubject.dataHash"]
         Off3["Level 2: Load Issuer Public Key (--public-key hex)"]
-        Off4["Execute local NIST FIPS 204 ML-DSA-65 signature verification"]
+        Off4["Execute local NIST FIPS 204 ML-DSA-65 DataIntegrityProof verification"]
         Off5["Output: Verified cryptographic integrity without internet or blockchain"]
         
         Off1 --> Off2 --> Off3 --> Off4 --> Off5
