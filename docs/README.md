@@ -97,5 +97,5 @@ Detailed operational runbooks, portal specifications, agile policy governance, a
 * **SDK Documentation:** [sdk/README.md](../sdk/package.json)
 * **Visual SDK Playground:** [examples/web-app](../examples/web-app)
 * **Project Changelog:** [CHANGELOG.md](../CHANGELOG.md)
-* **License (PolyForm Noncommercial 1.0.0):** [LICENSE](../LICENSE)
+* **License (PolyForm Noncommercial 2.0.0):** [LICENSE](../LICENSE)
 

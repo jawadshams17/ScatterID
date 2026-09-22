@@ -4,7 +4,7 @@
 [![CI](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml)
 [![Security: Gitleaks](https://img.shields.io/badge/Security-Gitleaks-blue.svg)](https://github.com/gitleaks/gitleaks)
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm_Noncommercial_1.0.0-blue.svg)](LICENSE)
+[![License: PolyForm Noncommercial 2.0.0](https://img.shields.io/badge/License-PolyForm_Noncommercial_2.0.0-blue.svg)](LICENSE)
 
 ScatterID is an open-source, decentralized, zero-knowledge identity verification infrastructure. It provides a reference framework for organizations to issue, anchor, and mathematically verify privacy-preserving digital credentials resilient against post-quantum cryptographic threats.
 
@@ -141,7 +141,7 @@ ScatterID/
 ├── CHANGELOG.md                # Milestone & Release History
 ├── SECURITY.md                 # Security Policy & Vulnerability Reporting
 ├── CONTRIBUTING.md             # Developer Contribution Guidelines
-├── LICENSE                     # PolyForm Noncommercial License 1.0.0
+├── LICENSE                     # PolyForm Noncommercial License 2.0.0
 └── README.md                   # Master Project Overview
 ```
 
@@ -163,7 +163,7 @@ See [SECURITY.md](SECURITY.md) for our responsible disclosure process and vulner
 
 ## License
 
-This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+This project is licensed under the **PolyForm Noncommercial License 2.0.0**.
 
 **You are free to:**
 * View, modify, and run the framework for personal use.

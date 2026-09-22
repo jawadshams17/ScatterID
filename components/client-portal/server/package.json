@@ -1,6 +1,6 @@
 {
   "name": "scatterid-client-portal-server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "ScatterID Counter-VPN Thin Proxy Gateway & Clerk Auth Service",
   "main": "src/server.ts",

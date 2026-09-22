@@ -575,7 +575,7 @@ info:
   description: >
     verification API. This service never accepts or returns raw claim data,
     private keys, or complete secret shares.
-  version: 1.0.0
+  version: 2.0.0
   contact:
     name: ScatterID Engineering
 servers:
