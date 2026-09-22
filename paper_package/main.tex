@@ -24,7 +24,7 @@
 \title{ScatterID 2.0: Quantum-Resilient W3C Verifiable Credentials with Minimally-Anchored Blockchain Storage and Zero-Knowledge Data Minimization}
 
 \author[KFUEIT]{Jawad Shams\corref{cor1}}
-\ead{jawadbhatti276@gmail.com}
+\ead{jawadshams1700@gmail.com}
 \address[KFUEIT]{Khawaja Fareed University of Engineering and Information Technology, Rahim Yar Khan, Pakistan}
 \cortext[cor1]{Corresponding author}
 
@@ -85,12 +85,12 @@ Prior evaluations of post-quantum credentials \cite{arakawa2025post, opilka2024p
 
 \section{ScatterID System Architecture \& Implementation}
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/fig1_pipeline.png}
+\includegraphics[width=\linewidth]{figures/fig1_pipeline.png}
 \caption{ScatterID 2.0 multi-zone system architecture and microservice topology. Zone 1 handles client-side RFC 8785 JCS canonicalization and CSPRNG salting. Zone 2 manages diagnostic telemetry. Zone 3 contains the isolated Verification API Gateway, mTLS-protected PQC Crypto Engine (NIST ML-DSA-65), HashiCorp Vault KMS, and Hyperledger Fabric Raft consortium.}
 \label{fig:topology}
-\end{figure*}
+\end{figure}
 
 \subsection{Client-Side Data Minimization \& Commitment Protocol}
 ScatterID 2.0 enforces absolute zero-knowledge data minimization at the client boundary. Raw identity claims never cross network boundaries or touch backend storage.
@@ -112,12 +112,12 @@ Let $\mathcal{C} = \{c_1, c_2, \dots, c_k\}$ represent a set of claim key-value 
 \end{enumerate}
 Only the resulting 256-bit \texttt{dataHash} string is transmitted to the Verification Gateway API (\texttt{POST /issue}). The raw attributes $c_i$ and salt $s$ remain exclusively on the user's local device.
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/fig2_conceptual.png}
+\includegraphics[width=\linewidth]{figures/fig2_conceptual.png}
 \caption{Zero-knowledge W3C Verifiable Credential issuance protocol and minimally-anchored blockchain storage flow. Raw attributes are salted and hashed client-side. The PQC engine signs the 32-byte \texttt{dataHash} with NIST ML-DSA-65. The resulting W3C VC (\texttt{JSON-LD}) with \texttt{DataIntegrityProof} is stored off-chain by the subject, while only the 32-byte \texttt{dataHash} commitment is anchored on-chain.}
 \label{fig:sequence}
-\end{figure*}
+\end{figure}
 
 \subsection{PQC Cryptographic Engine \& Vault KMS Integration}
 The core signing infrastructure sits within an isolated, mTLS-protected microservice (\texttt{components/crypto}). The signing engine leverages Python \texttt{liboqs-python} bindings \cite{liboqs2024} for NIST FIPS 204 ML-DSA-65 (CRYSTALS-Dilithium3). Key material is managed by HashiCorp Vault KMS utilizing AppRole authentication. The crypto microservice executes the ML-DSA-65 signature operation:
@@ -206,12 +206,12 @@ SPHINCS+-256s & $475,614 \pm 3.7$ & $845.4 \pm 0.5$ & 29,792 & 40,456 & 1,183 \\
 }
 \end{table*}
 
-\begin{figure*}[htbp]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/fig4_sdjwt_patterns.png}
+\includegraphics[width=\linewidth]{figures/fig4_sdjwt_patterns.png}
 \caption{SD-JWT selective disclosure payload overhead across Standard (100\%), 50\%, and 20\% disclosure patterns. Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays and digest elements.}
 \label{fig:sdjwt}
-\end{figure*}
+\end{figure}
 
 \subsection{Selective Disclosure Efficiency (SD-JWT Evaluation)}
 Table~\ref{tab:sdjwt} and Figure~\ref{fig:sdjwt} evaluate the overhead of selective disclosure across three patterns: Standard (100\% disclosure, 10/10 claims), Selective-50\% (5/10 claims), and Selective-20\% (2/10 claims). Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays, digest elements, and structural JSON containers. Disclosing only 20\% of claims reduces the transmitted payload to 88.9\% of original VC size for ML-DSA-44, compared to 69.5\% for Ed25519.

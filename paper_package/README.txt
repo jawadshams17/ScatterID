@@ -2,7 +2,7 @@
 ScatterID 2.0: LaTeX Paper Package for Overleaf / Elsevier Computers & Security
 ========================================================================
 
-Author: Jawad Shams (jawadbhatti276@gmail.com)
+Author: Jawad Shams (jawadshams1700@gmail.com)
 Affiliation: Khawaja Fareed University of Engineering and Information Technology
 
 Package Contents:
