@@ -1,0 +1,23 @@
+{
+  "name": "verification-api",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "1.14.4",
+    "@hyperledger/fabric-gateway": "1.11.0",
+    "better-sqlite3": "11.10.0",
+    "express": "^4.19.0",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0"
+  },
+  "devDependencies": {
+    "fast-check": "^4.9.0",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
+  }
+}
