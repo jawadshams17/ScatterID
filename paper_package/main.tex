@@ -177,7 +177,7 @@ We evaluated 15 cryptographic algorithms (4 classical, 11 post-quantum) on an AW
 \centering
 \caption{Cryptographic operation performance across classical and post-quantum algorithms ($n = 1000$). VC Size includes W3C JSON-LD envelope, \texttt{DataIntegrityProof}, Base64 signature, and headers.}
 \label{tab:primitives}
-\small
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrr}
 \toprule
 Algorithm Family & Signing Time ($\mu$s) & Verify Time ($\mu$s) & Sig Size (B) & VC Size (B) & Verify Throughput (ops/s)\\
@@ -202,7 +202,8 @@ SPHINCS+-128s & $314,968 \pm 4.2$ & $409.5 \pm 0.4$ & 7,856 & 11,208 & 2,446 \\
 SPHINCS+-192s & $542,136 \pm 4.6$ & $583.1 \pm 0.4$ & 16,224 & 22,365 & 1,716 \\
 SPHINCS+-256s & $475,614 \pm 3.7$ & $845.4 \pm 0.5$ & 29,792 & 40,456 & 1,183 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table*}
 
 \begin{figure*}[htbp]
@@ -215,11 +216,11 @@ SPHINCS+-256s & $475,614 \pm 3.7$ & $845.4 \pm 0.5$ & 29,792 & 40,456 & 1,183 \\
 \subsection{Selective Disclosure Efficiency (SD-JWT Evaluation)}
 Table~\ref{tab:sdjwt} and Figure~\ref{fig:sdjwt} evaluate the overhead of selective disclosure across three patterns: Standard (100\% disclosure, 10/10 claims), Selective-50\% (5/10 claims), and Selective-20\% (2/10 claims). Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays, digest elements, and structural JSON containers. Disclosing only 20\% of claims reduces the transmitted payload to 88.9\% of original VC size for ML-DSA-44, compared to 69.5\% for Ed25519.
 
-\begin{table}[t]
+\begin{table}[htbp]
 \centering
 \caption{Selective disclosure performance overhead across disclosure patterns ($n = 1000$).}
 \label{tab:sdjwt}
-\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{llrrr}
 \toprule
 Algorithm & Pattern & Issue ($\mu$s) & Verify ($\mu$s) & VC Size (B) \\
@@ -236,11 +237,13 @@ ML-DSA-65 & Standard & 105.1 & 47.9 & 5,132 \\
  & Selective-50\% & 125.9 & 49.1 & 6,144 \\
  & Selective-20\% & 125.5 & 49.2 & 6,144 \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
+\FloatBarrier
 \subsection{Cross-Language Parity \& Reconciliation Audit}
-ScatterID's automated parity suite (\texttt{tests/offline\_verify\_parity.test.sh}) validated 10,000 generated test credentials across Node.js (\texttt{verify\_offline.js}) and Python (\texttt{verify\_offline.py}). Both runtimes produced 100\% mathematical agreement on Level 1 pre-image commitments and Level 2 ML-DSA-65 signatures. Furthermore, the background reconciliation daemon successfully detected simulated state discrepancies between local SQLite credentials and Hyperledger Fabric \texttt{QueryProof} ledger states within 500~ms of injected divergence.
+ScatterID's automated parity suite (\texttt{tests/\allowbreak offline\allowbreak \_verify\allowbreak \_parity.test.sh}) validated 10,000 generated test credentials across Node.js (\texttt{verify\allowbreak \_offline.js}) and Python (\texttt{verify\allowbreak \_offline.py}). Both runtimes produced 100\% mathematical agreement on Level 1 pre-image commitments and Level 2 ML-DSA-65 signatures. Furthermore, the background reconciliation daemon successfully detected simulated state discrepancies between local SQLite credentials and Hyperledger Fabric \texttt{QueryProof} ledger states within 500~ms of injected divergence.
 
 \section{Security Analysis \& Operational Discussion}
 ScatterID 2.0 provides provable post-quantum security guarantees:
