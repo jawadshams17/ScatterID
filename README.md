@@ -1,4 +1,4 @@
-# ScatterID — Post-Quantum Identity Verification Infrastructure
+# ScatterID 2.0: Quantum-Resilient W3C Verifiable Credentials with Minimally-Anchored Blockchain Storage
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-jawadshams17-blue.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jawadshams17)
 [![CI](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml)
