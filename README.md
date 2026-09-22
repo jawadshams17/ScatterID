@@ -1,9 +1,9 @@
 # ScatterID — Post-Quantum Identity Verification Infrastructure
 
 [![Website](https://img.shields.io/badge/Website-scatterid.tech-blue.svg)](https://www.scatterid.tech/)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0x4rc4n3-blue.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/0x4rc4n3)
-[![CI](https://github.com/0x4rc4n3/ScatterID/actions/workflows/ci.yml/badge.svg)](https://github.com/0x4rc4n3/ScatterID/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/0x4rc4n3/ScatterID/actions/workflows/codeql.yml/badge.svg)](https://github.com/0x4rc4n3/ScatterID/actions/workflows/codeql.yml)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-jawadshams17-blue.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jawadshams17)
+[![CI](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml)
 [![Security: Gitleaks](https://img.shields.io/badge/Security-Gitleaks-blue.svg)](https://github.com/gitleaks/gitleaks)
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm_Noncommercial_1.0.0-blue.svg)](LICENSE)
 
@@ -29,7 +29,7 @@ ScatterID runs on standard Linux and macOS environments with **Docker** and **Do
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/0x4rc4n3/ScatterID.git
+git clone https://github.com/jawadshams17/ScatterID.git
 cd ScatterID
 
 # 2. Launch the turnkey stack (provisions keys, mTLS certificates, ledger, and services)
@@ -150,12 +150,12 @@ ScatterID/
 
 ## About the Creator
 
-ScatterID is designed and built by **Mudassir Javed** (`0x4rc4n3`), a cybersecurity graduate focused on security architecture, applied cryptography, and turning standards-track research (like NIST's post-quantum signature schemes) into deployable systems. This project is the technical centerpiece of that focus — an end-to-end reference architecture rather than a single algorithm demo, covering key management, service topology, offline verification tooling, and operational documentation.
+ScatterID is designed and built by **Jawad Shams** (`jawadshams17`), a cybersecurity graduate focused on security architecture, applied cryptography, and turning standards-track research (like NIST's post-quantum signature schemes) into deployable systems. This project is the technical centerpiece of that focus — an end-to-end reference architecture rather than a single algorithm demo, covering key management, service topology, offline verification tooling, and operational documentation.
 
-* **LinkedIn:** [linkedin.com/in/0x4rc4n3](https://www.linkedin.com/in/0x4rc4n3)
-* **Email:** [mudassirbhatti276@gmail.com](mailto:mudassirbhatti276@gmail.com)
+* **LinkedIn:** [linkedin.com/in/jawadshams17](https://www.linkedin.com/in/jawadshams17)
+* **Email:** [Jawadbhatti276@gmail.com](mailto:Jawadbhatti276@gmail.com)
 * **Website:** [scatterid.tech](https://www.scatterid.tech/)
-* **GitHub:** [github.com/0x4rc4n3](https://github.com/0x4rc4n3)
+* **GitHub:** [github.com/jawadshams17](https://github.com/jawadshams17)
 
 ## Security Disclosures
 
