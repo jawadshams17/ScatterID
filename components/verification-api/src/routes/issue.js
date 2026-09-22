@@ -137,27 +137,50 @@ export async function issueRoute(req, res) {
     if (anchorError) {
       // 202 Accepted: Signing succeeded and credential is saved, but ledger anchor failed and must be retried
       return res.status(202).json({
-        status: 'anchor_failed',
-        reason: anchorError,
-        credentialId,
-        dataHash: credential.dataHash,
-        algorithm: credential.algorithm,
-        publicKeyId: credential.publicKeyId,
-        signature: credential.signature,
-        anchorTxId: null,
-        issuedAt: credential.issuedAt
+        "@context": [
+          "https://www.w3.org/2018/credentials/v1",
+          "https://w3id.org/security/suites/dsa-2024/v1"
+        ],
+        "id": `urn:uuid:${credentialId}`,
+        "type": ["VerifiableCredential", "ScatterIDCredential"],
+        "issuer": `did:scatterid:${credential.publicKeyId}`,
+        "issuanceDate": credential.issuedAt,
+        "credentialSubject": {
+          "id": `urn:hash:${credential.dataHash}`,
+          "status": 'anchor_failed',
+          "reason": anchorError
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": credential.algorithm,
+          "proofPurpose": "assertionMethod",
+          "verificationMethod": `did:scatterid:${credential.publicKeyId}#key-1`,
+          "proofValue": credential.signature
+        }
       });
     }
 
     return res.status(201).json({
-      status: 'anchored',
-      credentialId,
-      dataHash: credential.dataHash,
-      algorithm: credential.algorithm,
-      publicKeyId: credential.publicKeyId,
-      signature: credential.signature,
-      anchorTxId,
-      issuedAt: credential.issuedAt
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/security/suites/dsa-2024/v1"
+      ],
+      "id": `urn:uuid:${credentialId}`,
+      "type": ["VerifiableCredential", "ScatterIDCredential"],
+      "issuer": `did:scatterid:${credential.publicKeyId}`,
+      "issuanceDate": credential.issuedAt,
+      "credentialSubject": {
+        "id": `urn:hash:${credential.dataHash}`,
+        "status": 'anchored',
+        "anchorTxId": anchorTxId
+      },
+      "proof": {
+        "type": "DataIntegrityProof",
+        "cryptosuite": credential.algorithm,
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": `did:scatterid:${credential.publicKeyId}#key-1`,
+        "proofValue": credential.signature
+      }
     });
   } catch (globalErr) {
     return res.status(500).json({

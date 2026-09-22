@@ -3,16 +3,28 @@ import { queryProof } from '../chain/fabric.js';
 
 export async function verifyRoute(req, res) {
   try {
-    const { dataHash, credentialId } = req.body;
+    const { dataHash, credentialId, vc } = req.body;
 
-    if (!dataHash && !credentialId) {
+    let extractedDataHash = dataHash;
+    let extractedId = credentialId;
+
+    if (vc) {
+      if (vc.credentialSubject && vc.credentialSubject.id) {
+        extractedDataHash = vc.credentialSubject.id.replace('urn:hash:', '');
+      }
+      if (vc.id) {
+        extractedId = vc.id.replace('urn:uuid:', '');
+      }
+    }
+
+    if (!extractedDataHash && !extractedId) {
       return res.status(400).json({
-        error: 'Invalid parameter: either dataHash (64-character hex string) or credentialId (UUID v4) is required',
+        error: 'Invalid parameter: either dataHash, credentialId, or a full W3C vc is required',
         code: 'INVALID_PARAMETER',
       });
     }
 
-    if (dataHash !== undefined && (typeof dataHash !== 'string' || !/^[0-9a-fA-F]{64}$/.test(dataHash))) {
+    if (extractedDataHash !== undefined && (typeof extractedDataHash !== 'string' || !/^[0-9a-fA-F]{64}$/.test(extractedDataHash))) {
       return res.status(400).json({
         error: 'Invalid parameter: dataHash must be a 64-character hex string',
         code: 'INVALID_PARAMETER',
@@ -20,15 +32,15 @@ export async function verifyRoute(req, res) {
     }
 
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (credentialId !== undefined && (typeof credentialId !== 'string' || !uuidRegex.test(credentialId))) {
+    if (extractedId !== undefined && (typeof extractedId !== 'string' || !uuidRegex.test(extractedId))) {
       return res.status(400).json({
         error: 'Invalid parameter: credentialId must be a valid UUID v4',
         code: 'INVALID_PARAMETER',
       });
     }
 
-    const normalizedHash = dataHash ? dataHash.trim().toLowerCase() : null;
-    const normalizedId = credentialId ? credentialId.trim().toLowerCase() : null;
+    const normalizedHash = extractedDataHash ? extractedDataHash.trim().toLowerCase() : null;
+    const normalizedId = extractedId ? extractedId.trim().toLowerCase() : null;
 
     let record = null;
     if (normalizedId) {
