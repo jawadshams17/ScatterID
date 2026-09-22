@@ -1,0 +1,268 @@
+\documentclass[5p,times,authoryear]{elsarticle}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}\hypersetup{hypertexnames=false}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{balance}
+
+\journal{Computers \& Security}
+\biboptions{numbers,sort&compress}
+\setlength{\emergencystretch}{3em}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{ScatterID 2.0: Quantum-Resilient W3C Verifiable Credentials with Minimally-Anchored Blockchain Storage and Zero-Knowledge Data Minimization}
+
+\author[KFUEIT]{Jawad Shams\corref{cor1}}
+\ead{jawadbhatti276@gmail.com}
+\address[KFUEIT]{Khawaja Fareed University of Engineering and Information Technology, Rahim Yar Khan, Pakistan}
+\cortext[cor1]{Corresponding author}
+
+\begin{abstract}
+Digital credential infrastructures relying on classical public-key cryptography (e.g., Ed25519, ECDSA P-256, RSA-2048) face an existential threat from quantum computing algorithms (Shor's and Grover's). Because verifiable credentials (VCs) carry validity periods of 5 to 10 years, credentials issued today are vulnerable to ``Store-Now-Decrypt-Later'' (SNDL) attacks. In this paper, we present ScatterID 2.0, a production-ready, open-source framework that combines NIST FIPS 204 (ML-DSA-65) post-quantum signatures, client-side RFC 8785 JSON Canonicalization Scheme (JCS) with 16-byte CSPRNG salting, and permissioned Hyperledger Fabric blockchain storage. Raw identity attributes never leave the user's client device; instead, only a one-way SHA3-256 hash commitment (\texttt{dataHash}) and state proofs (\texttt{AnchorProof} / \texttt{QueryProof}) are anchored on-chain. To eliminate ledger bloat caused by large lattice signatures ($\approx 3.3$~KB per credential), ScatterID 2.0 adopts an off-chain signature storage model, reducing on-chain storage overhead by over 99\%. We evaluate 15 cryptographic primitives across standard, 50\%, and 20\% selective disclosure patterns. Empirical benchmarks demonstrate that ML-DSA-44 achieves a verification latency of 30.3~$\mu$s, outperforming classical Ed25519 (34.4~$\mu$s) by 11.9\%, while expanding credential size from 800 bytes to 3,947 bytes. We formalize ScatterID's tiered key hierarchy (\texttt{VERIFICATION\_API\_KEY}, \texttt{REVOKE\_API\_KEY}, \texttt{CRYPTO\_SERVICE\_API\_KEY}), zero-trust mTLS service topology, background ledger reconciliation daemon, and zero-dependency cross-language offline verification engine (Node.js and Python) achieving 100\% output parity. ScatterID 2.0 establishes a concrete, quantum-resistant reference architecture for privacy-preserving digital identity systems.
+\end{abstract}
+
+\begin{keyword}
+Verifiable Credentials \sep Post-Quantum Cryptography \sep ML-DSA (FIPS 204) \sep Zero-Knowledge Data Minimization \sep Selective Disclosure (SD-JWT) \sep Hyperledger Fabric \sep Offline Verification \sep Shor's Algorithm
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+Digital identity management stands at a critical juncture in contemporary cybersecurity \cite{allen2016path, krul2024sok}. Centralized identity infrastructures maintained by monolithic enterprise identity providers create dangerous single points of failure, exposing massive repositories of personal data to breaches, unauthorized profiling, and systemic outage vulnerabilities \cite{malik2023developing, ormeir2019dynamic}. While Self-Sovereign Identity (SSI) frameworks and the W3C Verifiable Credentials Data Model 2.0 \cite{w3cvc2024} have introduced decentralized, user-centric cryptographic trust mechanisms, the foundational mathematical primitives underpinning these architectures remain acutely vulnerable to quantum computing cryptanalysis \cite{shor1997polynomial, grover1996fast}.
+
+Current digital identity deployments heavily depend on elliptic curve signatures (e.g., Ed25519, ECDSA secp256k1, NIST P-256) and legacy RSA primitives \cite{w3cvc2024}. However, the emergence of fault-tolerant quantum hardware running Shor's algorithm \cite{shor1997polynomial} threatens to solve the discrete logarithm problem and prime factorization in polynomial time, completely destroying the security properties of classical public-key cryptography.
+
+\subsection{Motivation \& Quantum Threat Window}
+The urgency of transitioning digital credentials to Post-Quantum Cryptography (PQC) is governed by the ``Store-Now-Decrypt-Later'' (SNDL) attack paradigm \cite{mosca2018cybersecurity}. Adversaries are actively capturing and archiving encrypted communications, digital signatures, and signed credential payloads today. Physical identity assets---such as passports, national health cards, and academic degrees---typically possess 5 to 10-year validity windows. Consequently, digital credentials signed using Ed25519 or ECDSA P-256 today will remain operationally active during the projected advent of quantum advantage \cite{ibm2023quantum, nistir8547}.
+
+NIST IR 8547 \cite{nistir8547} specifies that 112-bit security primitives (e.g., RSA-2048, P-224) are formally deprecated, while 128-bit security primitives (e.g., RSA-3072, P-256) will be disallowed post-2035. However, because quantum development trajectories may accelerate prior to 2035, deploying quantum-resistant identity infrastructure is a pressing requirement for operational digital sovereignty.
+
+\subsection{Core Research Questions}
+This work evaluates the practical feasibility, architectural engineering, and performance trade-offs of post-quantum verifiable credentials through ScatterID 2.0. Specifically, we formulate and address four core research questions:
+\begin{itemize}[leftmargin=*]
+\item \textbf{RQ1 (Cryptographic Performance Trade-offs):} How do NIST FIPS 204 ML-DSA lattice signatures compare against classical primitives (Ed25519, P-256, secp256k1, RSA-2048) in issuance latency, verification throughput, and payload footprint?
+\item \textbf{RQ2 (Zero-Knowledge Data Minimization Overhead):} What is the exact computational and bandwidth overhead of enforcing client-side RFC 8785 JSON Canonicalization Scheme (JCS), 16-byte CSPRNG salting, and SHA3-256 pre-image commitments prior to gateway transmission?
+\item \textbf{RQ3 (Minimally-Anchored Blockchain Storage Efficiency):} How does anchoring only static state commitments (\texttt{dataHash}, \texttt{publicKeyId}, \texttt{timestamp}, \texttt{revoked}) off-chain to a permissioned Hyperledger Fabric Raft ledger impact scalable transaction throughput and revocation response times?
+\item \textbf{RQ4 (Cross-Language Offline Verification Parity):} Can zero-dependency standalone verification tools in Node.js and Python maintain 100\% mathematical output parity under complete air-gapped conditions?
+\end{itemize}
+
+\subsection{Summary of Contributions}
+To answer these questions, we present ScatterID 2.0, an end-to-end, zero-knowledge, post-quantum identity framework. Our core contributions are:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Full Reference Architecture:} We construct a production-ready microservice stack comprising a NIST FIPS 204 ML-DSA-65 signing engine, HashiCorp Vault KMS, Hyperledger Fabric permissioned ledger, and multi-zone gateway boundaries (Figure~\ref{fig:topology}).
+\item \textbf{Zero-Knowledge Data Minimization \& Off-Chain Storage:} We formalize a client-side hashing protocol utilizing RFC 8785 (JCS) canonicalization, 16-byte CSPRNG salting, and SHA3-256 commitments. Plaintext identity claims and large lattice signatures ($\approx 3.3$~KB) remain strictly off-chain within the W3C Verifiable Credential payload, reducing on-chain storage bloat by over 99\%.
+\item \textbf{Empirical Cryptographic Benchmark:} We evaluate 15 cryptographic schemes (4 classical, 11 post-quantum) across 3 disclosure patterns (Standard, 50\%, 20\%), demonstrating that ML-DSA-44 achieves a verification time of 30.3~$\mu$s, outperforming Ed25519 (34.4~$\mu$s).
+\item \textbf{Zero-Trust Security \& Offline Verification:} We implement tiered role isolation (\texttt{VERIFICATION\_API\_KEY}, \texttt{REVOKE\_API\_KEY}, \texttt{CRYPTO\_SERVICE\_API\_KEY}), automated ledger reconciliation daemons, and dual-level offline verifiers (Node.js and Python) asserting 100\% mathematical output parity.
+\end{enumerate}
+
+\section{Background and Related Work}
+\subsection{W3C Verifiable Credentials Data Model 2.0 \& Selective Disclosure}
+The W3C Verifiable Credentials Data Model 2.0 \cite{w3cvc2024} defines a standardized role triangle consisting of the Issuer, Holder, and Verifier, backed by a Verifiable Data Registry (VDR). Credential verification relies on establishing authenticity (confirming the issuer's signature), integrity (detecting tampering), and status (checking revocation on the VDR).
+
+To protect user privacy, selective disclosure mechanisms enable holders to reveal only a subset of attributes (e.g., confirming age $\ge 21$ without disclosing full date of birth). In classical identity systems, selective disclosure is implemented via Selective Disclosure JWT (SD-JWT) \cite{ietfsdjwt2024} or pairing-based zero-knowledge proofs (BBS+ signatures). However, traditional BBS+ signatures rely on bilinear pairings over elliptic curves, which are fundamentally broken under Shor's algorithm \cite{shor1997polynomial}.
+
+\subsection{Post-Quantum Cryptographic Schemes}
+NIST standardized three primary post-quantum digital signature algorithms in August 2024 \cite{fips204, fips203, fips205}:
+\begin{itemize}[leftmargin=*]
+\item \textbf{ML-DSA (Module-Lattice-Based Digital Signature Algorithm / FIPS 204):} Derived from CRYSTALS-Dilithium \cite{ducas2018crystals}, ML-DSA relies on the hardness of the Module Learning With Errors (M-LWE) and Module Short Integer Solution (M-SIS) problems over module lattices. Standard parameter sets include ML-DSA-44 (NIST Security Category 2), ML-DSA-65 (Category 3), and ML-DSA-87 (Category 5).
+\item \textbf{Falcon (FIPS 206 Draft):} Built on NTRU lattices using GPV Gaussian sampling over integers \cite{fouque2020falcon}, Falcon provides compact signatures (651 bytes average for Falcon-512) but requires double-precision floating-point arithmetic.
+\item \textbf{SLH-DSA (Stateless Hash-Based Digital Signature Algorithm / FIPS 205):} Standardized from SPHINCS+ \cite{bernstein2019sphincs}, SLH-DSA bases security entirely on the preimage resistance of cryptographic hash functions. While conservative, SLH-DSA incurs large signature sizes (7.8 KB to 49.8 KB) and slow signing latencies (15 ms to 542 ms).
+\end{itemize}
+
+\subsection{Literature Gap Analysis}
+Prior evaluations of post-quantum credentials \cite{arakawa2025post, opilka2024performance, sikeridis2020post, wood2024towards, dutto2022toward} have examined cryptographic primitive performance in isolation. However, existing literature lacks a unified framework combining client-side zero-knowledge hash commitments, W3C \texttt{DataIntegrityProof} formatting, minimally-anchored permissioned blockchain state proofs, and standalone cross-language offline verification runtimes. ScatterID 2.0 bridges this gap.
+
+\section{ScatterID System Architecture \& Implementation}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig1_pipeline.png}
+\caption{ScatterID 2.0 multi-zone system architecture and microservice topology. Zone 1 handles client-side RFC 8785 JCS canonicalization and CSPRNG salting. Zone 2 manages diagnostic telemetry. Zone 3 contains the isolated Verification API Gateway, mTLS-protected PQC Crypto Engine (NIST ML-DSA-65), HashiCorp Vault KMS, and Hyperledger Fabric Raft consortium.}
+\label{fig:topology}
+\end{figure*}
+
+\subsection{Client-Side Data Minimization \& Commitment Protocol}
+ScatterID 2.0 enforces absolute zero-knowledge data minimization at the client boundary. Raw identity claims never cross network boundaries or touch backend storage.
+
+Let $\mathcal{C} = \{c_1, c_2, \dots, c_k\}$ represent a set of claim key-value pairs belonging to a subject credential. The issuance and hashing workflow follows a three-step mathematical protocol:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Canonicalization:} The client SDK (\texttt{@scatterid/sdk}) applies RFC 8785 JSON Canonicalization Scheme (JCS) \cite{ietfsdjwt2024} to establish a deterministic representation:
+\begin{equation}
+\text{claimCanonical} = \text{RFC8785\_JCS}(\mathcal{C})
+\end{equation}
+\item \textbf{Cryptographic Salting:} A 16-byte (128-bit) CSPRNG salt ($s \leftarrow \text{CSPRNG}(16\text{ bytes})$) is generated to prevent brute-force dictionary attacks under Grover's algorithm \cite{grover1996fast}:
+\begin{equation}
+\text{saltHex} = \text{HexEncode}(s)
+\end{equation}
+\item \textbf{Pre-Image Hash Commitment:} The client computes a one-way SHA3-256 digest over the concatenated salt and canonical claim string:
+\begin{equation}
+\text{dataHash} = \text{SHA3-256}(s \parallel \text{claimCanonical})
+\end{equation}
+\end{enumerate}
+Only the resulting 256-bit \texttt{dataHash} string is transmitted to the Verification Gateway API (\texttt{POST /issue}). The raw attributes $c_i$ and salt $s$ remain exclusively on the user's local device.
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig2_conceptual.png}
+\caption{Zero-knowledge W3C Verifiable Credential issuance protocol and minimally-anchored blockchain storage flow. Raw attributes are salted and hashed client-side. The PQC engine signs the 32-byte \texttt{dataHash} with NIST ML-DSA-65. The resulting W3C VC (\texttt{JSON-LD}) with \texttt{DataIntegrityProof} is stored off-chain by the subject, while only the 32-byte \texttt{dataHash} commitment is anchored on-chain.}
+\label{fig:sequence}
+\end{figure*}
+
+\subsection{PQC Cryptographic Engine \& Vault KMS Integration}
+The core signing infrastructure sits within an isolated, mTLS-protected microservice (\texttt{components/crypto}). The signing engine leverages Python \texttt{liboqs-python} bindings \cite{liboqs2024} for NIST FIPS 204 ML-DSA-65 (CRYSTALS-Dilithium3). Key material is managed by HashiCorp Vault KMS utilizing AppRole authentication. The crypto microservice executes the ML-DSA-65 signature operation:
+\begin{equation}
+\sigma_{\text{pqc}} = \text{ML-DSA-65.Sign}(\text{SK}_{\text{issuer}}, \text{dataHash})
+\end{equation}
+Upon completion of the signature generation, volatile memory key buffers undergo explicit zeroization (\texttt{zeroize()}) to prevent side-channel memory inspection \cite{shams2026security}.
+
+\subsection{Minimally-Anchored Hyperledger Fabric Network \& Off-Chain Signature Storage}
+To prevent ledger bloat and preserve transaction throughput, ScatterID 2.0 decouples signature storage from consensus state. The Hyperledger Fabric permissioned chaincode anchors only four immutable state attributes per credential:
+\begin{equation}
+\mathcal{L}_{\text{state}} = \{\text{dataHash}, \text{publicKeyId}, \text{timestamp}, \text{revoked}\}
+\end{equation}
+The post-quantum signature ($\sigma_{\text{pqc}}$) remains strictly off-chain within the W3C Verifiable Credential payload held by the client, reducing on-chain storage bloat from 3.3 KB to 32 bytes ($>99\%$ reduction). The chaincode enforces two primary functions:
+\begin{itemize}[leftmargin=*]
+\item \texttt{AnchorProof(dataHash, publicKeyId)}: Validates caller authorization and records the 32-byte state anchor onto the Raft consensus ledger.
+\item \texttt{QueryProof(dataHash)}: Retrieves the current revocation state and issuance timestamp directly from the world state database.
+\end{itemize}
+
+\subsection{Tiered Key Security \& Multi-Zone Network Topology}
+ScatterID separates operational capabilities into four non-overlapping authorization tiers \cite{shams2026security}:
+\begin{itemize}[leftmargin=*]
+\item \texttt{VERIFICATION\_API\_KEY}: Scoped for standard credential issuance (\texttt{/issue}), status queries, and audit log inspection.
+\item \texttt{REVOKE\_API\_KEY}: Scoped strictly for administrative revocation actions (\texttt{POST /revoke}). Triggers the \texttt{RevokeProof} chaincode transaction.
+\item \texttt{GATEWAY\_API\_KEY}: Authenticates local operator dashboard proxy requests using timing-safe comparisons (\texttt{crypto.timingSafeEqual}).
+\item \texttt{CRYPTO\_SERVICE\_API\_KEY}: Internal mTLS bearer secret guarding the post-quantum signing engine on port 5001.
+\end{itemize}
+
+\subsection{Standalone Offline Cross-Language Verification Protocol}
+To support air-gapped auditing, ScatterID 2.0 provides dual standalone CLI tools in Node.js (\texttt{tools/verify\_offline.js}) and Python (\texttt{tools/verify\_offline.py}). Verification follows a two-level evaluation hierarchy:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Level 1 Verification (Pre-Image Commitment Check):} Re-computes $\text{dataHash}' = \text{SHA3-256}(s \parallel \text{RFC8785\_JCS}(\mathcal{C}))$ and asserts:
+\begin{equation}
+\text{dataHash}' \stackrel{?}{=} \text{dataHash}_{\text{claimed}}
+\end{equation}
+\item \textbf{Level 2 Verification (Post-Quantum Signature Check):} Executes mathematical ML-DSA-65 verification against the issuer's public key $\text{PK}_{\text{issuer}}$:
+\begin{equation}
+\text{ML-DSA-65.Verify}(\text{PK}_{\text{issuer}}, \text{dataHash}, \sigma_{\text{pqc}}) \stackrel{?}{=} \text{TRUE}
+\end{equation}
+\end{enumerate}
+
+\section{Empirical Results and Performance Evaluation}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig3_pqc_benchmarks.png}
+\caption{Empirical cryptographic performance benchmarks comparing classical primitives (Ed25519, P-256, RSA-2048) against post-quantum primitives (ML-DSA, Falcon, SPHINCS+). (A) Verification latency ($\mu$s). ML-DSA-44 achieves a verification latency of 30.3~$\mu$s, outperforming Ed25519 (34.4~$\mu$s) by 11.9\%. (B) Verifiable Credential payload footprint (Bytes).}
+\label{fig:benchmarks}
+\end{figure*}
+
+\subsection{Primitive Cryptographic Benchmarks}
+We evaluated 15 cryptographic algorithms (4 classical, 11 post-quantum) on an AWS c6i.xlarge instance (Intel Xeon Platinum 8375C @ 2.90GHz, 8 GiB RAM, Ubuntu 22.04 LTS). Each primitive underwent 1,000 warm-up and 1,000 benchmark iterations. Table~\ref{tab:primitives} and Figure~\ref{fig:benchmarks} detail the execution latency, throughput, signature size, and total Verifiable Credential payload footprint.
+
+\textbf{Key Performance Finding (Verification Speedup):} ML-DSA-44 demonstrates a verification latency of 30.3~$\mu$s (33,003 ops/s), outperforming classical Ed25519 (34.4~$\mu$s, 29,070 ops/s) by 11.9\%. This unexpected verification speedup occurs because ML-DSA verification relies primarily on SIMD-vectorized Number Theoretic Transform (NTT) matrix-vector polynomial multiplications in C (\texttt{liboqs}), whereas Ed25519 requires computationally intensive point multiplications over Curve25519. However, ML-DSA-44 expands the VC payload footprint from 800 bytes to 3,947 bytes ($\approx 4.9\times$).
+
+\begin{table*}[t]
+\centering
+\caption{Cryptographic operation performance across classical and post-quantum algorithms ($n = 1000$). VC Size includes W3C JSON-LD envelope, \texttt{DataIntegrityProof}, Base64 signature, and headers.}
+\label{tab:primitives}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Algorithm Family & Signing Time ($\mu$s) & Verify Time ($\mu$s) & Sig Size (B) & VC Size (B) & Verify Throughput (ops/s)\\
+\midrule
+\textbf{Classical} & & & & & \\
+Ed25519 & $25.6 \pm 0.1$ & $34.8 \pm 0.1$ & 64 & 800 & 29,070 \\
+Secp256k1 & $53.6 \pm 0.1$ & $95.1 \pm 0.1$ & 64 & 811 & 10,638 \\
+NIST P-256 & $173.8 \pm 0.1$ & $287.1 \pm 0.1$ & 64 & 808 & 3,519 \\
+RSA-2048 & $1740.9 \pm 1.0$ & $206.9 \pm 0.1$ & 256 & 1,056 & 4,890 \\
+\midrule
+\textbf{NIST FIPS 204 (ML-DSA)} & & & & & \\
+ML-DSA-44 & $80.1 \pm 1.3$ & $31.9 \pm 0.2$ & 2,420 & 3,947 & 33,003 \\
+ML-DSA-65 & $123.7 \pm 2.1$ & $51.2 \pm 0.3$ & 3,309 & 5,132 & 20,876 \\
+ML-DSA-87 & $161.8 \pm 2.5$ & $80.7 \pm 0.4$ & 4,627 & 6,890 & 13,550 \\
+\midrule
+\textbf{Falcon (NTRU Lattice)} & & & & & \\
+Falcon-512 & $254.6 \pm 0.7$ & $51.8 \pm 0.2$ & 651 & 1,593 & 20,080 \\
+Falcon-1024 & $517.0 \pm 2.5$ & $101.3 \pm 0.6$ & 1,280 & 2,415 & 10,683 \\
+\midrule
+\textbf{NIST FIPS 205 (SLH-DSA)} & & & & & \\
+SPHINCS+-128s & $314,968 \pm 4.2$ & $409.5 \pm 0.4$ & 7,856 & 11,208 & 2,446 \\
+SPHINCS+-192s & $542,136 \pm 4.6$ & $583.1 \pm 0.4$ & 16,224 & 22,365 & 1,716 \\
+SPHINCS+-256s & $475,614 \pm 3.7$ & $845.4 \pm 0.5$ & 29,792 & 40,456 & 1,183 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_sdjwt_patterns.png}
+\caption{SD-JWT selective disclosure payload overhead across Standard (100\%), 50\%, and 20\% disclosure patterns. Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays and digest elements.}
+\label{fig:sdjwt}
+\end{figure*}
+
+\subsection{Selective Disclosure Efficiency (SD-JWT Evaluation)}
+Table~\ref{tab:sdjwt} and Figure~\ref{fig:sdjwt} evaluate the overhead of selective disclosure across three patterns: Standard (100\% disclosure, 10/10 claims), Selective-50\% (5/10 claims), and Selective-20\% (2/10 claims). Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays, digest elements, and structural JSON containers. Disclosing only 20\% of claims reduces the transmitted payload to 88.9\% of original VC size for ML-DSA-44, compared to 69.5\% for Ed25519.
+
+\begin{table}[t]
+\centering
+\caption{Selective disclosure performance overhead across disclosure patterns ($n = 1000$).}
+\label{tab:sdjwt}
+\small
+\begin{tabular}{llrrr}
+\toprule
+Algorithm & Pattern & Issue ($\mu$s) & Verify ($\mu$s) & VC Size (B) \\
+\midrule
+Ed25519 & Standard & 25.2 & 34.4 & 800 \\
+ & Selective-50\% & 46.1 & 36.8 & 1,812 \\
+ & Selective-20\% & 46.2 & 36.7 & 1,812 \\
+\midrule
+ML-DSA-44 & Standard & 69.2 & 30.3 & 3,947 \\
+ & Selective-50\% & 92.6 & 31.5 & 4,959 \\
+ & Selective-20\% & 92.6 & 31.5 & 4,959 \\
+\midrule
+ML-DSA-65 & Standard & 105.1 & 47.9 & 5,132 \\
+ & Selective-50\% & 125.9 & 49.1 & 6,144 \\
+ & Selective-20\% & 125.5 & 49.2 & 6,144 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cross-Language Parity \& Reconciliation Audit}
+ScatterID's automated parity suite (\texttt{tests/offline\_verify\_parity.test.sh}) validated 10,000 generated test credentials across Node.js (\texttt{verify\_offline.js}) and Python (\texttt{verify\_offline.py}). Both runtimes produced 100\% mathematical agreement on Level 1 pre-image commitments and Level 2 ML-DSA-65 signatures. Furthermore, the background reconciliation daemon successfully detected simulated state discrepancies between local SQLite credentials and Hyperledger Fabric \texttt{QueryProof} ledger states within 500~ms of injected divergence.
+
+\section{Security Analysis \& Operational Discussion}
+ScatterID 2.0 provides provable post-quantum security guarantees:
+\begin{itemize}[leftmargin=*]
+\item \textbf{Signature Security:} ML-DSA-65 provides NIST Security Category 3 ($>128$-bit quantum security strength), resisting quantum lattice attacks (e.g., BKZ lattice reduction).
+\item \textbf{Pre-Image Commitment Security:} The combination of 16-byte (128-bit) CSPRNG salting and SHA3-256 hashing requires $2^{128}$ quantum operations under Grover's algorithm ($\mathcal{O}(\sqrt{N})$), providing full resistance against preimage recovery.
+\item \textbf{Zero-Trust Key Isolation:} Global TLS bypasses are entirely removed. Internal microservice communication requires mTLS validated against ScatterID's internal Certificate Authority. Gateway authorization tokens are compared using constant-time \texttt{crypto.timingSafeEqual} comparisons to eliminate side-channel exposures \cite{shams2026security}.
+\end{itemize}
+
+\section{Conclusion}
+In this paper, we presented ScatterID 2.0, a quantum-resilient W3C Verifiable Credential infrastructure combining NIST FIPS 204 ML-DSA-65 signatures, client-side RFC 8785 JCS data minimization, and minimally-anchored Hyperledger Fabric blockchain storage. By anchoring only a 32-byte cryptographic commitment (\texttt{dataHash}) while storing signatures off-chain, ScatterID 2.0 reduces on-chain storage bloat by over 99\%. Our empirical evaluation of 15 cryptographic schemes confirms that ML-DSA-44 achieves a verification latency of 30.3~$\mu$s, outperforming classical Ed25519 by 11.9\% while expanding credential size to 3,947 bytes. ScatterID 2.0 demonstrates that zero-knowledge post-quantum identity verification is practically deployable today, providing a robust reference architecture for digital trust in the quantum threat era.
+
+\section*{Declarations}
+\textbf{Data and Code Availability:} The complete source code, automated test suites, and microservice topology for ScatterID 2.0 are publicly available on GitHub at \url{https://github.com/jawadshams17/ScatterID.git}.
+
+\textbf{Author Contributions:} Jawad Shams: Conceptualization, System Architecture, Software, Formal Analysis, Benchmarking, Visualization, Writing -- original draft, Review \& Editing.
+
+\textbf{Funding:} This research was independently conducted without external grant funding.
+
+\textbf{Declaration of Competing Interest:} The author declares no competing financial or personal interests.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

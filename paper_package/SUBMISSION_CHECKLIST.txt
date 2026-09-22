@@ -1,0 +1,15 @@
+========================================================================
+ScatterID 2.0 Journal Submission Checklist (Computers & Security / Elsevier)
+========================================================================
+
+[X] 1. Title & Abstract aligned with ScatterID 2.0 (W3C VCs, Off-Chain Signature Storage, NIST ML-DSA-65).
+[X] 2. Author Name: Jawad Shams (Khawaja Fareed University of Engineering and Information Technology).
+[X] 3. Corresponding Email: jawadbhatti276@gmail.com.
+[X] 4. Equation 5 Fix: L_state = {dataHash, publicKeyId, timestamp, revoked} (Minimally-Anchored Off-Chain Signature Storage).
+[X] 5. High-Resolution Google Material Design Figures (Figure 1, Figure 2, Figure 3, Figure 4) included in PNG 300 DPI format.
+[X] 6. Tables 1 & 2 formatted with booktabs (toprule, midrule, bottomrule).
+[X] 7. Complete BibTeX references.bib file with all 25 cited publications.
+[X] 8. Open-Source GitHub Repository Link: https://github.com/jawadshams17/ScatterID.git
+[X] 9. Highlights file (highlights.txt) prepared.
+[X] 10. Zip package ready for 1-click Overleaf import.
+========================================================================

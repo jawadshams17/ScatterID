@@ -1,0 +1,5 @@
+- ScatterID 2.0 provides an open-source post-quantum W3C Verifiable Credential architecture using NIST FIPS 204 ML-DSA-65.
+- Client-side RFC 8785 (JCS) canonicalization and 16-byte CSPRNG salting enforce zero-knowledge data minimization.
+- Off-chain signature storage reduces Hyperledger Fabric blockchain storage bloat by >99% (anchoring only a 32-byte SHA3-256 dataHash).
+- Empirical evaluation of 15 algorithms shows ML-DSA-44 verification (30.3 µs) outperforms classical Ed25519 (34.4 µs) by 11.9%.
+- Cross-language Node.js and Python standalone offline verifiers maintain 100% mathematical output parity under air-gapped conditions.
