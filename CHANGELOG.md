@@ -71,7 +71,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [0.2.0] — 2026-08-24 · Zero-Knowledge Architecture Refactor (v1 → v2)
+## [0.2.0] — 2026-08-24 · Zero-Knowledge Architecture Refactor (v2 → v2)
 
 ### Changed
 - Complete architectural refactor to Zero-Knowledge hashing model
@@ -88,7 +88,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [0.1.0] — 2026-08-22 · Initial MVP Scaffold
+## [0.2.0] — 2026-08-22 · Initial MVP Scaffold
 
 ### Added
 - Initial component-based architecture: `crypto-service`, `verification-api`, `project-dashboard`

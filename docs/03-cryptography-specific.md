@@ -1,4 +1,4 @@
-> NOTE: This document reflects the original v1 architecture. ScatterID has since been upgraded to a Zero-Knowledge hashing model (v2). Please refer to the root README.md and docs/ScatterID Architecture.txt for current technical specifications.
+> NOTE: This document reflects the original v2 architecture. ScatterID has since been upgraded to a Zero-Knowledge hashing model (v2). Please refer to the root README.md and docs/ScatterID Architecture.txt for current technical specifications.
 
 # Cryptography-Specific Details
 

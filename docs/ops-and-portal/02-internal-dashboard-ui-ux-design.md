@@ -117,7 +117,7 @@ Tab strip:
 ### 6.1 Tab: "PQC Routine Rotation & Key Pool"
 
 - **Pre-Distributed Key Pool Overview (Shared View)**:
-  - Visual status stepper showing: `Active Key (v1)` $\rightarrow$ `Pre-Staged Key (v2 - Ready)` $\rightarrow$ `Pre-Staged Key (v3 - Ready)`.
+  - Visual status stepper showing: `Active Key (v2)` $\rightarrow$ `Pre-Staged Key (v2 - Ready)` $\rightarrow$ `Pre-Staged Key (v3 - Ready)`.
   - Displays sync coverage indicator across connected/synced verifier devices (e.g. "98.4% of verifier keyrings pre-staged with v2").
 - Mod view: a simple form — reason/justification text field, "Submit Rotation Request" button.
   After submit, shows a confirmation state with the request ID and "Awaiting Root approval."

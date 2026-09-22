@@ -154,14 +154,14 @@ The verifier maintains a local lightweight JSON/SQLite table called the **Author
 ```json
 [
   {
-    "key_id": "pqc-mldsa87-2024-v1",
+    "key_id": "pqc-mldsa87-2024-v2",
     "status": "retired",
     "valid_from": "2024-01-01T00:00:00Z",
     "valid_until": "2024-12-31T23:59:59Z",
     "public_key_hex": "3a8f... (2,592 bytes)"
   },
   {
-    "key_id": "pqc-mldsa87-2025-v1",
+    "key_id": "pqc-mldsa87-2025-v2",
     "status": "active",
     "valid_from": "2025-01-01T00:00:00Z",
     "valid_until": "2025-12-31T23:59:59Z",
@@ -171,7 +171,7 @@ The verifier maintains a local lightweight JSON/SQLite table called the **Author
 ```
 
 When a credential is presented:
-1. The verifier inspects the credential's metadata: `"key_id": "pqc-mldsa87-2024-v1"`.
+1. The verifier inspects the credential's metadata: `"key_id": "pqc-mldsa87-2024-v2"`.
 2. It fetches that specific public key from its local keyring.
 3. It validates the cryptographic signature. Credentials issued under older keys remain mathematically valid for their entire lifespan.
 

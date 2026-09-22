@@ -59,7 +59,7 @@ These guidelines follow the OWASP Top 10 and OWASP Application Security Verifica
 
 ### Server-Side Request Forgery (SSRF) Prevention
 
-- Any service that fetches URLs based on user/API input (if this pattern ever arises, e.g. a future webhook feature) must validate and restrict destinations — not currently a feature in v1, but flag for review if added later.
+- Any service that fetches URLs based on user/API input (if this pattern ever arises, e.g. a future webhook feature) must validate and restrict destinations — not currently a feature in v2, but flag for review if added later.
 
 ---
 
@@ -132,7 +132,7 @@ SAST runs as a required CI check on every PR (see CI/CD Pipeline Design Document
 
 | Function | Input | Output |
 |----------|-------|--------|
-| Out of scope (v1) | Physical security of cloud provider data centers, social engineering of team members (unless separately authorized), third-party cloud provider infrastructure itself | Not within our control or authority to test |
+| Out of scope (v2) | Physical security of cloud provider data centers, social engineering of team members (unless separately authorized), third-party cloud provider infrastructure itself | Not within our control or authority to test |
 | Explicitly authorized targets | Staging environment by default; production only with explicit written authorization and a defined testing window | Never test production without this authorization — same rule the Security-track interns follow (see their TODO doc) |
 
 ### Testing Approach
@@ -188,7 +188,7 @@ Initial rounds can be performed by the internal Security track team (founders + 
 
 A public vulnerability disclosure policy is a credibility signal to security-conscious B2B buyers (your primary target customers) even before you have a bug bounty budget. It shows you take security seriously and gives good-faith researchers a clear, safe path to report issues instead of going public or doing nothing.
 
-### Scope (v1 — Responsible Disclosure, No Paid Bounty Yet)
+### Scope (v2 — Responsible Disclosure, No Paid Bounty Yet)
 
 | Function | Input | Output |
 |----------|-------|--------|
@@ -225,7 +225,7 @@ A public vulnerability disclosure policy is a credibility signal to security-con
 
 ### Future: Paid Bug Bounty Program
 
-Once the company is registered and has revenue/funding, consider a paid bug bounty program (e.g. via HackerOne or Bugcrowd, or a self-managed program) to attract more sustained researcher attention, particularly once handling real customer identity data. This is a P2/future item — the responsible disclosure policy above is the appropriate v1 starting point given current resources.
+Once the company is registered and has revenue/funding, consider a paid bug bounty program (e.g. via HackerOne or Bugcrowd, or a self-managed program) to attract more sustained researcher attention, particularly once handling real customer identity data. This is a P2/future item — the responsible disclosure policy above is the appropriate v2 starting point given current resources.
 
 ### Internal Handling of External Reports
 

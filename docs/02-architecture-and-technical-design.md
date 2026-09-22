@@ -23,12 +23,12 @@ Earlier planning documents used phrases like "recommended" or "ML-DSA as the def
 
 *Fill in the bracketed fields and owners before distributing module TODOs. Do not leave any row undecided — an undecided row is where teams will silently diverge.*
 
-### Explicitly Out of Scope for v1 (Do Not Build)
+### Explicitly Out of Scope for v2 (Do Not Build)
 
 - Custom Layer-1 blockchain or consensus mechanism
 - Zero-knowledge selective disclosure (lattice-based ZK is still too heavy — Phase 4+ research track only)
 - Consumer-facing wallet or mobile app
-- Support for multiple PQC algorithm families simultaneously — one signature scheme for v1
+- Support for multiple PQC algorithm families simultaneously — one signature scheme for v2
 - Production-grade key management / HSM integration — MVP uses env-var secrets, clearly marked as non-production
 
 **⚠ If a module team's PR includes anything from this list, that's a sign the spec wasn't followed — flag it in review, don't merge it, and clarify the boundary in the next team sync.**
@@ -245,11 +245,11 @@ Do not hand this full document to intern teams — it reveals the whole system s
 | Supply chain risk | A compromised dependency (npm/pip package) introduces a backdoor | Lockfile-pinned dependencies, periodic dependency audits, avoid unnecessary third-party packages |
 | Insider risk | A team member or intern with legitimate access misuses it | Compartmentalized repo access (see PM Guide), audit logging on all administrative actions, prompt offboarding |
 
-### Explicitly Out of Scope for v1 Threat Model
+### Explicitly Out of Scope for v2 Threat Model
 
 - Nation-state-level targeted attacks against physical infrastructure
 - Side-channel attacks on underlying hardware (timing attacks, power analysis)
-- Attacks against fuzzy/biometric matching — not applicable, since v1 doesn't implement this
+- Attacks against fuzzy/biometric matching — not applicable, since v2 doesn't implement this
 
 *These are documented as known limitations, not silently ignored — revisit before any enterprise/government pilot that specifically requires this level of assurance.*
 
@@ -281,7 +281,7 @@ Do not hand this full document to intern teams — it reveals the whole system s
 ### Level 1 DFD — Issuance Process
 
 ```
-Issuer ──▶ [1.0 Receive Claim] ──▶ [2.0 Hash Claim (SHA3-256)]
+Issuer ──▶ [2.0 Receive Claim] ──▶ [2.0 Hash Claim (SHA3-256)]
                                       │
                                       ▼
                               [3.0 Sign Hash (ML-DSA-65)]
@@ -300,7 +300,7 @@ Issuer ──▶ [1.0 Receive Claim] ──▶ [2.0 Hash Claim (SHA3-256)]
 
 
 ```
-Verifier ──▶ [1.0 Receive credentialId] ──▶ [2.0 Lookup CredentialRecord]
+Verifier ──▶ [2.0 Receive credentialId] ──▶ [2.0 Lookup CredentialRecord]
                                                │
                                                ▼
                                       [3.0 Check Anchor Status on Fabric]
@@ -579,7 +579,7 @@ info:
   contact:
     name: ScatterID Engineering
 servers:
-  - url: https://api.scatterid.com/v1
+  - url: https://api.scatterid.com/v2
     description: Production gateway
   - url: http://localhost:3000
     description: Local development

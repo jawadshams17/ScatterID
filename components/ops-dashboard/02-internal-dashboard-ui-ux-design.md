@@ -130,7 +130,7 @@ Tab strip again:
 
 ## 7. Page: Audit Log
 
-- Full paginated table: timestamp, actor, actor role (Mod/Root — new column vs v1), action type,
+- Full paginated table: timestamp, actor, actor role (Mod/Root — new column vs v2), action type,
   target, result.
 - Filter row: action type, date range, actor role. The actor-role filter is new and important here
   — since a single request now generates a Mod-decision entry and a separate Root-execution entry,

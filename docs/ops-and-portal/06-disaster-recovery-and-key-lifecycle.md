@@ -162,7 +162,7 @@ Offline devices have never seen `v_emergency_fresh`. To prevent them from failin
      ```json
      {
        "type": "ScatterID_Key_Delegation_Endorsement",
-       "endorsing_key_id": "pqc-mldsa87-2025-v1",
+       "endorsing_key_id": "pqc-mldsa87-2025-v2",
        "delegated_key_id": "pqc-mldsa87-2025-emergency-v99",
        "delegated_public_key_hex": "4a7b... (2,592 bytes)",
        "valid_from": "2025-08-01T00:00:00Z",

@@ -63,6 +63,6 @@ network decision is the first thing to confirm with them, before touching either
 
 ## Change history
 
-- v1 (original): flat admin/view-only split on the dashboard; single-mode sandbox-only portal.
+- v2 (original): flat admin/view-only split on the dashboard; single-mode sandbox-only portal.
 - v2: introduced Mod/Root decide-vs-execute split, hard/soft channel model, and Help Desk
   operational mode on the portal. This is the current version.

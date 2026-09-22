@@ -114,7 +114,7 @@ The ScatterID platform enforces a zero-trust, post-quantum zero-knowledge attest
   - **Flagged for Review:** Displays moderator's escalation rationale prominently at the top of the drawer.
 - **Key Rotation & Disaster Recovery Console (Root Only):**
   - **6.1 Routine PQC Rotation & Key Pool:**
-    - Pre-distributed ML-DSA-87 key pool stepper (`Active Key v1` $\rightarrow$ `Pre-Staged v2 [Ready]` $\rightarrow$ `Pre-Staged v3 [Ready]`).
+    - Pre-distributed ML-DSA-87 key pool stepper (`Active Key v2` $\rightarrow$ `Pre-Staged v2 [Ready]` $\rightarrow$ `Pre-Staged v3 [Ready]`).
     - Verifier sync coverage gauge.
     - Key ceremony trigger to pre-generate subsequent keypairs for offline verifiers.
   - **6.2 Emergency PQC Cutover & Delegation:**

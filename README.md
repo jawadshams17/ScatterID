@@ -1,6 +1,5 @@
 # ScatterID — Post-Quantum Identity Verification Infrastructure
 
-[![Website](https://img.shields.io/badge/Website-scatterid.tech-blue.svg)](https://www.scatterid.tech/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-jawadshams17-blue.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jawadshams17)
 [![CI](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml/badge.svg)](https://github.com/jawadshams17/ScatterID/actions/workflows/codeql.yml)
@@ -154,7 +153,6 @@ ScatterID is designed and built by **Jawad Shams** (`jawadshams17`), a cybersecu
 
 * **LinkedIn:** [linkedin.com/in/jawadshams17](https://www.linkedin.com/in/jawadshams17)
 * **Email:** [Jawadbhatti276@gmail.com](mailto:Jawadbhatti276@gmail.com)
-* **Website:** [scatterid.tech](https://www.scatterid.tech/)
 * **GitHub:** [github.com/jawadshams17](https://github.com/jawadshams17)
 
 ## Security Disclosures

@@ -13,13 +13,13 @@ Identity data is permanent, but the cryptography protecting it is not. Passwords
 5. Provide a working SDK that a third-party developer can integrate in under a day
 6. Validate the approach with at least one real design-partner pilot (target: a university or small KYC vendor) within the roadmap's Phase 3
 
-### Non-Goals (v1)
+### Non-Goals (v2)
 
 - Building a custom Layer-1 blockchain or consensus mechanism — Hyperledger Fabric is used as-is, not extended or replaced
 - Full zero-knowledge selective disclosure — lattice-based ZK proofs remain a Phase 4+ research track
-- Fuzzy/biometric matching (fingerprint, face) — genuinely open research territory; v1 targets exact-match identity data only (IDs, KYC status, credential claims, document hashes)
-- Consumer-facing wallet or mobile app — v1 is B2B infrastructure (SDK + API), not an end-user product
-- Public mainnet deployment — v1 runs on our own private, permissioned network
+- Fuzzy/biometric matching (fingerprint, face) — genuinely open research territory; v2 targets exact-match identity data only (IDs, KYC status, credential claims, document hashes)
+- Consumer-facing wallet or mobile app — v2 is B2B infrastructure (SDK + API), not an end-user product
+- Public mainnet deployment — v2 runs on our own private, permissioned network
 
 ### Core User Stories
 
@@ -103,7 +103,7 @@ This version supersedes the initial PRD draft. Key updates:
 2. Every signature is post-quantum from day one — no retrofitting later
 3. We own our infrastructure (private blockchain, our own nodes) — no dependency on third-party chains for the security model to hold
 4. Sell to businesses that verify identity claims, not consumers — B2B API/SDK, not a wallet app
-5. Ship a narrow, real v1 before chasing every advanced feature (ZK proofs, biometrics) — credibility over hype
+5. Ship a narrow, real v2 before chasing every advanced feature (ZK proofs, biometrics) — credibility over hype
 
 ### Roadmap
 
@@ -118,7 +118,7 @@ This version supersedes the initial PRD draft. Key updates:
 
 - A custom Layer-1 blockchain consensus mechanism — using Hyperledger Fabric, not inventing our own
 - A consumer-facing wallet or mobile app
-- Full zero-knowledge selective disclosure — research track, not v1
+- Full zero-knowledge selective disclosure — research track, not v2
 
 ### Success Definition (12-Month Horizon)
 
@@ -180,12 +180,12 @@ Post-quantum cryptography adoption is accelerating across the blockchain and sec
 | 6 | Government / eID Pilot Programs | National ID systems, especially smaller/emerging programs | High credibility if landed, but slow sales cycle — not a first-customer target |
 | 7 | Insurance Companies | Verify claims-related identity/document data without full storage liability | Good mid-term segment once product is proven |
 
-### Explicitly Deprioritized (Not v1 Targets)
+### Explicitly Deprioritized (Not v2 Targets)
 
 - Physical access control companies (fingerprint/door lock systems) — requires fuzzy/biometric matching, which is a research track, not core
 - Consumer-facing apps — ScatterID is B2B infrastructure, not a consumer product
 
-### Core Use Case (v1): University Credential Verification
+### Core Use Case (v2): University Credential Verification
 
 
 **Process:**
@@ -195,7 +195,7 @@ Post-quantum cryptography adoption is accelerating across the blockchain and sec
 3. ScatterID signs the dataHash using NIST ML-DSA-65 post-quantum lattice signatures and anchors the proof on Hyperledger Fabric — tamper-evident, timestamped
 4. Employer (verifier) queries the verification API with the claim and salt — receives a valid/invalid cryptographic response without raw data ever being stored on servers or ledger
 
-### Core Use Case (v1, Alternative): KYC Status Verification
+### Core Use Case (v2, Alternative): KYC Status Verification
 
 **Process:**
 
@@ -287,7 +287,7 @@ B2B SDK and verification API, licensed per-verification or via subscription. No 
 | **Primary Competitors** | Traditional KYC providers (classical crypto), PQC blockchains (not identity-focused), academic SSI research (pre-product) |
 | **Primary Targets** | Universities (fastest), KYC vendors (strongest pain), fintechs (compliance-driven) |
 | **Core Risks** | Larger players pivoting, slow enterprise sales, maturing PQC tooling |
-| **Product Principles** | No single point holds full credential; PQC from day one; own infrastructure; B2B focus; ship v1 before advanced features |
+| **Product Principles** | No single point holds full credential; PQC from day one; own infrastructure; B2B focus; ship v2 before advanced features |
 
 ---
 

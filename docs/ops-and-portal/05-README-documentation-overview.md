@@ -99,7 +99,7 @@ A credential request (issue or revoke) originates at the **Help Desk Portal**, o
 
 ## 7. Change History
 
-- **v1.0**: Baseline implementation (flat admin/viewer dashboard, public demo sandbox).
+- **v2.0**: Baseline implementation (flat admin/viewer dashboard, public demo sandbox).
 - **v2.0**: Introduction of Mod/Root dual-custody model, verification channel addendum (Hard/Soft), and operational Help Desk mode.
 - **v2.1 (Current)**:
   - Adopted **Scenario B: Tiered Risk** (Hard-channel issue auto-executes upon Mod approval; Soft-channel issue and all revocations strictly require Root execution).
