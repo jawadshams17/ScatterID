@@ -14,6 +14,15 @@
 \usepackage{xcolor}
 \usepackage{balance}
 
+\raggedbottom
+\setcounter{topnumber}{6}
+\setcounter{bottomnumber}{6}
+\setcounter{totalnumber}{12}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.80}
+
 \journal{Computers \& Security}
 \biboptions{numbers,sort&compress}
 \setlength{\emergencystretch}{3em}
@@ -85,7 +94,7 @@ Prior evaluations of post-quantum credentials \cite{arakawa2025post, opilka2024p
 
 \section{ScatterID System Architecture \& Implementation}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig1_pipeline.png}
 \caption{ScatterID 2.0 multi-zone system architecture and microservice topology. Zone 1 handles client-side RFC 8785 JCS canonicalization and CSPRNG salting. Zone 2 manages diagnostic telemetry. Zone 3 contains the isolated Verification API Gateway, mTLS-protected PQC Crypto Engine (NIST ML-DSA-65), HashiCorp Vault KMS, and Hyperledger Fabric Raft consortium.}
@@ -112,7 +121,7 @@ Let $\mathcal{C} = \{c_1, c_2, \dots, c_k\}$ represent a set of claim key-value 
 \end{enumerate}
 Only the resulting 256-bit \texttt{dataHash} string is transmitted to the Verification Gateway API (\texttt{POST /issue}). The raw attributes $c_i$ and salt $s$ remain exclusively on the user's local device.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig2_conceptual.png}
 \caption{Zero-knowledge W3C Verifiable Credential issuance protocol and minimally-anchored blockchain storage flow. Raw attributes are salted and hashed client-side. The PQC engine signs the 32-byte \texttt{dataHash} with NIST ML-DSA-65. The resulting W3C VC (\texttt{JSON-LD}) with \texttt{DataIntegrityProof} is stored off-chain by the subject, while only the 32-byte \texttt{dataHash} commitment is anchored on-chain.}
@@ -173,7 +182,7 @@ We evaluated 15 cryptographic algorithms (4 classical, 11 post-quantum) on an AW
 
 \textbf{Key Performance Finding (Verification Speedup):} ML-DSA-44 demonstrates a verification latency of 30.3~$\mu$s (33,003 ops/s), outperforming classical Ed25519 (34.4~$\mu$s, 29,070 ops/s) by 11.9\%. This unexpected verification speedup occurs because ML-DSA verification relies primarily on SIMD-vectorized Number Theoretic Transform (NTT) matrix-vector polynomial multiplications in C (\texttt{liboqs}), whereas Ed25519 requires computationally intensive point multiplications over Curve25519. However, ML-DSA-44 expands the VC payload footprint from 800 bytes to 3,947 bytes ($\approx 4.9\times$).
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{Cryptographic operation performance across classical and post-quantum algorithms ($n = 1000$). VC Size includes W3C JSON-LD envelope, \texttt{DataIntegrityProof}, Base64 signature, and headers.}
 \label{tab:primitives}
@@ -206,7 +215,7 @@ SPHINCS+-256s & $475,614$ & $845.4$ & 29,792 & 40,456 & 1,183 \\
 }
 \end{table}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig4_sdjwt_patterns.png}
 \caption{SD-JWT selective disclosure payload overhead across Standard (100\%), 50\%, and 20\% disclosure patterns. Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays and digest elements.}
@@ -216,7 +225,7 @@ SPHINCS+-256s & $475,614$ & $845.4$ & 29,792 & 40,456 & 1,183 \\
 \subsection{Selective Disclosure Efficiency (SD-JWT Evaluation)}
 Table~\ref{tab:sdjwt} and Figure~\ref{fig:sdjwt} evaluate the overhead of selective disclosure across three patterns: Standard (100\% disclosure, 10/10 claims), Selective-50\% (5/10 claims), and Selective-20\% (2/10 claims). Converting credentials to selective disclosure format adds a fixed overhead of $\approx 1,012$ bytes across all schemes due to salt arrays, digest elements, and structural JSON containers. Disclosing only 20\% of claims reduces the transmitted payload to 88.9\% of original VC size for ML-DSA-44, compared to 69.5\% for Ed25519.
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{Selective disclosure performance overhead across disclosure patterns ($n = 1000$).}
 \label{tab:sdjwt}
