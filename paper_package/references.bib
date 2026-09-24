@@ -71,24 +71,39 @@
 }
 
 @misc{ibm2023quantum,
-  author    = {{IBM}},
-  title     = {IBM Launches \$100 Million Partnership to Develop 100,000-Qubit Quantum-Centric Supercomputer},
-  howpublished = {IBM Press Release},
-  year      = {2023}
+  author       = {{IBM Research}},
+  title        = {{IBM Quantum Development Roadmap: 100,000-Qubit Quantum-Centric Supercomputer}},
+  howpublished = {IBM Press Release, \url{https://newsroom.ibm.com/}},
+  year         = {2023},
+  note         = {Cited for quantum hardware trajectory; not an evidentiary security reference}
 }
 
 @techreport{nistir8547,
-  author    = {Moody, Dustin and Perlner, Ray and Regenscheid, Andrew and Robinson, Angela and Cooper, David},
-  title     = {NIST IR 8547: Transition to Post-Quantum Cryptography Standards},
+  author      = {Moody, Dustin and Perlner, Ray and Regenscheid, Andrew and Robinson, Angela and Cooper, David},
+  title       = {{NIST IR 8547: Transition to Post-Quantum Cryptography Standards}},
   institution = {National Institute of Standards and Technology (NIST)},
-  year      = {2024}
+  type        = {NIST Interagency Report},
+  number      = {8547},
+  year        = {2024},
+  url         = {https://doi.org/10.6028/NIST.IR.8547}
 }
 
 @techreport{ietfsdjwt2024,
-  author    = {Fett, Daniel and Yasuda, K. and Campbell, B.},
-  title     = {Selective Disclosure for JWTs (SD-JWT)},
-  institution = {IETF Internet-Draft draft-ietf-oauth-selective-disclosure-jwt-22},
-  year      = {2024}
+  author      = {Fett, Daniel and Yasuda, Kristina and Campbell, Brian},
+  title       = {{Selective Disclosure for JWTs (SD-JWT)}},
+  institution = {Internet Engineering Task Force (IETF)},
+  type        = {Internet-Draft},
+  number      = {draft-ietf-oauth-selective-disclosure-jwt-22},
+  year        = {2024},
+  url         = {https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/}
+}
+
+@misc{rfc8785,
+  author       = {Rundgren, Anders and Jordan, Bret and Erdtman, Samuel},
+  title        = {{RFC 8785: JSON Canonicalization Scheme (JCS)}},
+  howpublished = {Request for Comments, IETF},
+  year         = {2020},
+  url          = {https://www.rfc-editor.org/rfc/rfc8785}
 }
 
 @techreport{fips204,
@@ -185,15 +200,43 @@
 }
 
 @misc{shams2026security,
-  author    = {Shams, Jawad},
-  title     = {ScatterID 2.0 Security Policy and Key Governance Specifications},
+  author       = {Shams, Jawad},
+  title        = {{ScatterID 2.0 Security Policy, Key Governance, and Implementation Specifications}},
   howpublished = {GitHub Repository: \url{https://github.com/jawadshams17/ScatterID}},
-  year      = {2026}
+  year         = {2026},
+  note         = {Includes SECURITY.md, tiered API key architecture, and mTLS configuration}
 }
 
 @misc{shams2026changelog,
-  author    = {Shams, Jawad},
-  title     = {ScatterID 2.0 Release Changelog and Backend Remediation Log},
+  author       = {Shams, Jawad},
+  title        = {{ScatterID 2.0 Release Changelog and Backend Remediation Log}},
   howpublished = {GitHub Repository: \url{https://github.com/jawadshams17/ScatterID}},
-  year      = {2026}
+  year         = {2026}
+}
+
+@misc{nodejs_timingsafe,
+  author       = {{Node.js Foundation}},
+  title        = {{crypto.timingSafeEqual -- Node.js Cryptography Documentation}},
+  howpublished = {\url{https://nodejs.org/api/crypto.html\#cryptotimingsafeequala-b}},
+  year         = {2024},
+  note         = {Constant-time byte comparison to prevent timing side-channel attacks}
+}
+
+@article{kocher1996timing,
+  author    = {Kocher, Paul C.},
+  title     = {Timing Attacks on Implementations of {Diffie-Hellman}, {RSA}, {DSS}, and Other Systems},
+  booktitle = {Advances in Cryptology -- CRYPTO 1996},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {1109},
+  pages     = {104--113},
+  publisher = {Springer},
+  year      = {1996}
+}
+
+@misc{shams2026benchmarks,
+  author       = {Shams, Jawad},
+  title        = {{ScatterID 2.0 Raw Cryptographic Benchmark Data (n=10,000)}},
+  howpublished = {GitHub Repository: \url{https://github.com/jawadshams17/ScatterID/tree/master/benchmarks/results}},
+  year         = {2026},
+  note         = {CSV and JSON benchmark artifacts traceable to every number in Table 1 and Table 2}
 }

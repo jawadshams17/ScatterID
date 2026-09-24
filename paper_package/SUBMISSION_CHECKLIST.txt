@@ -2,14 +2,40 @@
 ScatterID 2.0 Journal Submission Checklist (Computers & Security / Elsevier)
 ========================================================================
 
-[X] 1. Title & Abstract aligned with ScatterID 2.0 (W3C VCs, Off-Chain Signature Storage, NIST ML-DSA-65).
-[X] 2. Author Name: Jawad Shams (Khawaja Fareed University of Engineering and Information Technology).
-[X] 3. Corresponding Email: jawadshams1700@gmail.com.
-[X] 4. Equation 5 Fix: L_state = {dataHash, publicKeyId, timestamp, revoked} (Minimally-Anchored Off-Chain Signature Storage).
-[X] 5. High-Resolution Google Material Design Figures (Figure 1, Figure 2, Figure 3, Figure 4) included in PNG 300 DPI format.
-[X] 6. Tables 1 & 2 formatted with booktabs (toprule, midrule, bottomrule).
-[X] 7. Complete BibTeX references.bib file with all 25 cited publications.
-[X] 8. Open-Source GitHub Repository Link: https://github.com/jawadshams17/ScatterID.git
-[X] 9. Highlights file (highlights.txt) prepared.
+[X] 1.  Title & Abstract aligned with ScatterID 2.0 (W3C VCs, Off-Chain Signature Storage, NIST ML-DSA-65).
+[X] 2.  Author Name: Jawad Shams (Khawaja Fareed University of Engineering and Information Technology).
+[X] 3.  Corresponding Email: jawadshams1700@gmail.com.
+[X] 4.  Equation 5 Fix: L_state = {dataHash, publicKeyId, timestamp, revoked}.
+[X] 5.  High-Resolution Google Material Design Figures (Figs 1-5, 8) included in PNG format.
+[X] 6.  Tables 1-4 formatted with booktabs (toprule, midrule, bottomrule).
+[X] 7.  Complete BibTeX references.bib file with all cited publications.
+[X] 8.  Open-Source GitHub Repository: https://github.com/jawadshams17/ScatterID.git
+[X] 9.  Highlights file (highlights.txt) prepared.
 [X] 10. Zip package ready for 1-click Overleaf import.
+
+--- Phase 0 Benchmark Integrity ---
+[X] 11. benchmarks/run_crypto_bench.py created and committed.
+[X] 12. Hardware described accurately (AMD Ryzen 5 3600, 16 GiB RAM, Windows 11).
+[X] 13. n=10,000 warm-up=1,000 methodology stated in Section 4.1 (RQ1).
+[X] 14. Raw CSV + summary JSON path cited in abstract and Section 4.1.
+[X] 15. Conflicting methodology paragraphs removed (single hardware description exists).
+
+--- Phase 1 Empirical Gap Closure ---
+[X] 16. RQ2 (JCS overhead): 4.2 us mean reported in new Section 4.2.
+[X] 17. RQ3 (Fabric throughput): tests/fabric_throughput_rq3.test.sh created; Table 3 added.
+[X] 18. RQ4 (cross-language speed): tests/parity_speed_rq4.test.sh created; Table 4 added.
+
+--- Phase 2 Structural Additions ---
+[X] 19. Section 6 Limitations / Threats to Validity added (5 items).
+[X] 20. Section 5.1 Threat Model paragraph added before security bullet points.
+[X] 21. Figure 5 (threat model diagram) added and cited.
+[X] 22. Table 2a related-work comparison table added at end of Section 2.3.
+[X] 23. Ref [24] split: nodejs_timingsafe (for timing-safe claim) + kocher1996timing + shams2026security (for impl details).
+
+--- Phase 3 Citation & Formatting ---
+[X] 24. Single template: elsarticle 5p (two-column). IEEE draft discarded.
+[X] 25. Ref ibm2023quantum and nistir8547 are two clean separate BibTeX entries.
+[X] 26. rfc8785 added as proper citation for JCS canonicalization.
+[X] 27. Figure 8 (variance/SEM bar chart) added after Table 1.
+
 ========================================================================
